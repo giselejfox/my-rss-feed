@@ -11,7 +11,7 @@ function App() {
 
   // Array of RSS feed sources
   const feedSources = [
-    // 'https://www.door.link/rss.xml',
+    'https://www.door.link/rss.xml',
     'https://fetchrss.com/rss/673931b99e558b54e60b4b32673931a1fa3008abc706f832.xml', // leahs field notes youtube
     'https://fetchrss.com/rss/673931b99e558b54e60b4b326739322132d1b326b40c3e03.xml', // rosie sweden youtube
     'https://sarahcswett.substack.com/feed',
