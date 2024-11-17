@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-// import Parser from 'rss-parser';
-// const parser = new Parser();
+import formatDate from './helpers/formatDate';
 
 function App() {
 
@@ -56,8 +55,6 @@ function App() {
       // Flatten the array of arrays into one array of feed items
       const allFeedItems = allFeeds.flat();
 
-      console.log(allFeedItems)
-
       let compare = (a, b) => {
         if (a.date < b.date) {
           console.log(a.date +" is lower than " + b.date)
@@ -80,24 +77,12 @@ function App() {
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   // Fetch feeds when component mounts
   useEffect(() => {
     fetchFeeds();
   }, []);
-
-  function formatDate(date) {
-    const month = date.getMonth() + 1; // getMonth() returns 0-11, so add 1
-    const day = date.getDate();
-    const year = date.getFullYear();
-  
-    // Pad the month and day with leading zeros if needed
-    const formattedMonth = month < 10 ? `0${month}` : month;
-    const formattedDay = day < 10 ? `0${day}` : day;
-  
-    return `${formattedMonth}-${formattedDay}-${year}`;
-  }
 
   const feedElems = feedItems.map((item, index) => {
     return (
