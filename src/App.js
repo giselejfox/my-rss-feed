@@ -26,7 +26,7 @@ function App() {
       if (data.status === 'ok') {
         return data.items.map((item) => ({
           title: item.title,
-          link: item.link,
+          link: item.link.replace("/watch?", "/watch_popup?"),
           date: item.pubDate,
           source: data.feed.title,  // Optional: you can add the feed's title for reference
         }));
