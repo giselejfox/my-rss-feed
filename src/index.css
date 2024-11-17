@@ -11,3 +11,22 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Make the selected radio button black */
+.custom-radio {
+  appearance: none;  /* Remove default styling */
+  width: 8px;       /* Set width of the radio button */
+  height: 8px;      /* Set height of the radio button */
+  border-radius: 50%; /* Make it round */
+  border: 1px solid #dee2e6;  /* Border color */
+  /* position: relative; Position for pseudo elements */
+  background-color: white;  /* Background color */
+  cursor: pointer;  /* Cursor pointer for better UX */
+}
+
+.custom-radio:checked {
+  width: 8px;       /* Set width of the radio button */
+  height: 8px;      /* Set height of the radio button */
+  background-color: black;  /* Change background to black */
+  border-color: black;      /* Change border to black */
+}
