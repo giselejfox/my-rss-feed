@@ -27,11 +27,16 @@ function App() {
     'https://fetchrss.com/rss/673931b99e558b54e60b4b32673931a1fa3008abc706f832.xml', // leahs field notes youtube
     'https://fetchrss.com/rss/673931b99e558b54e60b4b326739322132d1b326b40c3e03.xml', // rosie sweden youtube
     'https://sarahcswett.substack.com/feed',
+    'https://fetchrss.com/rss/673931b99e558b54e60b4b32673e76cc7b7cc8b7290bb8c2.xml', // hank green youtube channel
   ];
 
   // Function to fetch feed from a single source
   const fetchFeed = async (source) => {
     try {
+
+      // TODO
+      // if normal rss ...
+      // if need to use our server ...
       const feedUrl = `https://rss2json.com/api.json?rss_url=${encodeURIComponent(source)}`;
       const response = await fetch(feedUrl);
       const data = await response.json();
