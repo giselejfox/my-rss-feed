@@ -10,7 +10,10 @@ app.get('/test', async (req, res) => {
       res.status(500).send('Error');
     }
 });
+
+// Use Heroku-provided port or default to 3000
+const port = process.env.PORT || 3000;
   
-app.listen(3000, () => {
-    console.log(`Server is running at http://localhost:${3000}`);
+app.listen(port, () => {
+    console.log(`Server is running at http://localhost:${port}`);
 });
