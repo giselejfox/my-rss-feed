@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from 'react';
 
-import formatDate from './helpers/formatDate';
 import FilterPanel from './components/FilterPanel';
+
+import fetchYoutubeContent from './helpers/fetchYoutubeContent';
+import fetchRSSFeed from './helpers/fetchRSSFeed';
+
+import formatDate from './helpers/formatDate';
+import compareDates from './helpers/compareDates';
+
+import { feedData } from './data/feedData';
 
 function App() {
 
@@ -21,43 +28,16 @@ function App() {
     setSelectedSource(e.target.value)
   }
 
-  // Array of RSS feed sources
-  const feedLinks = [
-    'https://www.door.link/rss.xml',
-    'https://fetchrss.com/rss/673931b99e558b54e60b4b32673931a1fa3008abc706f832.xml', // leahs field notes youtube
-    'https://fetchrss.com/rss/673931b99e558b54e60b4b326739322132d1b326b40c3e03.xml', // rosie sweden youtube
-    'https://sarahcswett.substack.com/feed',
-    'https://fetchrss.com/rss/673931b99e558b54e60b4b32673e76cc7b7cc8b7290bb8c2.xml', // hank green youtube channel
-  ];
+  const getData = async (itemData) => {
+    let returnArray = []
+    if (itemData.type === "youtube") {
+      returnArray = await fetchYoutubeContent(itemData.youtubeHandle)
+    } else if (itemData.type === "rss") {
+      returnArray = await fetchRSSFeed(itemData.rssFeed)
+    } 
+    return returnArray
+  }
 
-  // Function to fetch feed from a single source
-  const fetchFeed = async (source) => {
-    try {
-
-      // TODO
-      // if normal rss ...
-      // if need to use our server ...
-      const feedUrl = `https://rss2json.com/api.json?rss_url=${encodeURIComponent(source)}`;
-      const response = await fetch(feedUrl);
-      const data = await response.json();
-
-      if (data.status === 'ok') {
-        return data.items.map((item) => ({
-          title: item.title,
-          link: item.link.replace("/watch?", "/watch_popup?"),
-          date: item.pubDate,
-          source: data.feed.title.replace("- YouTube", ""),
-        }));
-      } else {
-        throw new Error(`Failed to fetch feed from ${source}`);
-      }
-    } catch (err) {
-      console.error('Error fetching feed:', err);
-      setError(err.message || 'An error occurred while fetching the feeds');
-      return [];
-    }
-  };
-  
   // Fetch feeds from all sources
   const fetchFeeds = async () => {
     setLoading(true);
@@ -65,7 +45,7 @@ function App() {
 
     try {
       // Fetch feeds for all sources in parallel
-      const feedPromises = feedLinks.map(fetchFeed);
+      const feedPromises = feedData.map(getData);
 
       // Wait for all feed data to be fetched
       const allFeeds = await Promise.all(feedPromises);
@@ -73,19 +53,8 @@ function App() {
       // Flatten the array of arrays into one array of feed items
       const allFeedItems = allFeeds.flat();
 
-      let compare = (a, b) => {
-        if (a.date < b.date) {
-          console.log(a.date +" is lower than " + b.date)
-            return 1;
-        }
-        if (a.date > b.date) {
-            return -1;
-        }
-        return 0;
-      };
-
       // Sort feed items by date in descending order (newest first)
-      const sortedFeedItems = allFeedItems.sort(compare);
+      const sortedFeedItems = allFeedItems.sort(compareDates);
 
       // Update state with the combined feed items
       setFeedItems(sortedFeedItems);
