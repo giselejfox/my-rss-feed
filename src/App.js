@@ -59,7 +59,7 @@ function App() {
 
   return (
     <div className="App container">
-      <h1 className='mt-5 mb-3 fw-bold'>Gisele's RSS Feed</h1>
+      <h1 className='mt-5 mb-3 fw-bold'>Gisele's RSS Reader</h1>
       <div className="row">
         <div className='col-12 col-lg-2'>
           <FilterPanel feedSources={feedSources} handleSetSelectedSource={handleSetSelectedSource} selectedSource={selectedSource} />
