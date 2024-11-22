@@ -11,7 +11,7 @@ import { initializeApp } from "firebase/app";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAOsne6sxCNVs9MqPzN1ojrGDZRtCFMzEY",
+  apiKey: process.env.REACT_APP_YOUTUBE_API_CREDENTIAL,
   authDomain: "my-rss-feed-c0c06.firebaseapp.com",
   databaseURL: "https://my-rss-feed-c0c06-default-rtdb.firebaseio.com",
   projectId: "my-rss-feed-c0c06",
