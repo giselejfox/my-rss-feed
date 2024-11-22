@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { getDatabase, ref, onValue } from 'firebase/database';
 
 import FilterPanel from './components/FilterPanel';
 import formatDate from './helpers/formatDate';
 
 function App() {
-
-  const db = getDatabase();
 
   const [feedItems, setFeedItems] = useState([])
   const [shownFeedItems, setShownFeedItems] = useState([])
@@ -24,16 +21,20 @@ function App() {
 
   const getData = async () => {
     try {
-      const dataRef = ref(db, "data")
-      onValue(dataRef , (snapshot) => {
-        const data = snapshot.val();
-        // Update state with the combined feed items
-        setFeedItems(data);
-        setShownFeedItems(data)
-        setFeedSources([...new Set(data.map((item) => item.source))])
-      });
+      // Fetch data from Netlify function
+      const response = await fetch('/.netlify/functions/fetchFirebaseData');
+      const data = await response.json();
+      
+      if (response.ok) {
+        // Update state with the fetched data
+        setFeedItems(data.feedItems);
+        setShownFeedItems(data.feedItems);
+        setFeedSources([...new Set(data.feedItems.map((item) => item.source))]); // Get unique sources
+      } else {
+        console.error('Error fetching data:', data.message);
+      }
     } catch (error) {
-      console.error('Error fetching users:', error);
+      console.error('Error fetching data:', error);
     }
   };
 
