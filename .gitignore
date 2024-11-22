@@ -23,3 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 
 .env
+# Local Netlify folder
+.netlify
+
+my-rss-feed-c0c06-firebase-adminsdk-unpab-edc5397f64.json

@@ -2,21 +2,25 @@ import React, { useEffect, useState } from 'react';
 
 import FilterPanel from './components/FilterPanel';
 
-import fetchYoutubeContent from './helpers/fetchYoutubeContent';
-import fetchRSSFeed from './helpers/fetchRSSFeed';
+// import fetchYoutubeContent from './helpers/fetchYoutubeContent';
+// import fetchRSSFeed from './helpers/fetchRSSFeed';
 
 import formatDate from './helpers/formatDate';
-import compareDates from './helpers/compareDates';
+// import compareDates from './helpers/compareDates';
 
-import { feedData } from './data/feedData';
+// import { feedData } from './data/feedData';
+
+import { getDatabase, ref, onValue } from 'firebase/database';
 
 function App() {
+
+  const db = getDatabase();
 
   const [feedItems, setFeedItems] = useState([])
   const [shownFeedItems, setShownFeedItems] = useState([])
   const [feedSources, setFeedSources] = useState([])
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  // const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState(null);
   const [selectedSource, setSelectedSource] = useState("All")
 
   const handleSetSelectedSource = (e) => {
@@ -28,49 +32,66 @@ function App() {
     setSelectedSource(e.target.value)
   }
 
-  const getData = async (itemData) => {
-    let returnArray = []
-    if (itemData.type === "youtube") {
-      returnArray = await fetchYoutubeContent(itemData.youtubeHandle)
-    } else if (itemData.type === "rss") {
-      returnArray = await fetchRSSFeed(itemData.rssFeed)
-    } 
-    return returnArray
-  }
+  // const getData = async (itemData) => {
+  //   let returnArray = []
+  //   if (itemData.type === "youtube") {
+  //     returnArray = await fetchYoutubeContent(itemData.youtubeHandle)
+  //   } else if (itemData.type === "rss") {
+  //     returnArray = await fetchRSSFeed(itemData.rssFeed)
+  //   } 
+  //   return returnArray
+  // }
 
-  // Fetch feeds from all sources
-  const fetchFeeds = async () => {
-    setLoading(true);
-    setError(null);
+  // // Fetch feeds from all sources
+  // const fetchFeeds = async () => {
+  //   setLoading(true);
+  //   setError(null);
 
+  //   try {
+  //     // Fetch feeds for all sources in parallel
+  //     const feedPromises = feedData.map(getData);
+
+  //     // Wait for all feed data to be fetched
+  //     const allFeeds = await Promise.all(feedPromises);
+
+  //     // Flatten the array of arrays into one array of feed items
+  //     const allFeedItems = allFeeds.flat();
+
+  //     // Sort feed items by date in descending order (newest first)
+  //     const sortedFeedItems = allFeedItems.sort(compareDates);
+
+  //     // Update state with the combined feed items
+  //     setFeedItems(sortedFeedItems);
+  //     setShownFeedItems(sortedFeedItems)
+  //     setFeedSources([...new Set(sortedFeedItems.map((item) => item.source))])
+  //   } catch (err) {
+  //     console.error('Error in fetching feeds:', err);
+  //     setError('Error fetching the feeds');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };  
+
+  const getData = async () => {
     try {
-      // Fetch feeds for all sources in parallel
-      const feedPromises = feedData.map(getData);
+      const dataRef = ref(db, "data")
+      onValue(dataRef , (snapshot) => {
+        const data = snapshot.val();
 
-      // Wait for all feed data to be fetched
-      const allFeeds = await Promise.all(feedPromises);
-
-      // Flatten the array of arrays into one array of feed items
-      const allFeedItems = allFeeds.flat();
-
-      // Sort feed items by date in descending order (newest first)
-      const sortedFeedItems = allFeedItems.sort(compareDates);
-
-      // Update state with the combined feed items
-      setFeedItems(sortedFeedItems);
-      setShownFeedItems(sortedFeedItems)
-      setFeedSources([...new Set(sortedFeedItems.map((item) => item.source))])
-    } catch (err) {
-      console.error('Error in fetching feeds:', err);
-      setError('Error fetching the feeds');
-    } finally {
-      setLoading(false);
+        // Update state with the combined feed items
+        setFeedItems(data);
+        setShownFeedItems(data)
+        setFeedSources([...new Set(data.map((item) => item.source))])
+      });
+    } catch (error) {
+      console.error('Error fetching users:', error);
     }
-  };  
+  };
 
   // Fetch feeds when component mounts
   useEffect(() => {
-    fetchFeeds();
+    // fetchFeeds();
+    getData()
   }, []);
 
   const feedElems = shownFeedItems.map((item, index) => {
@@ -87,17 +108,17 @@ function App() {
     )
   })
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
 
-  if (error) {
-    return <div>{error}</div>;
-  }
+  // if (error) {
+  //   return <div>{error}</div>;
+  // }
 
   return (
     <div className="App container">
-      <h1 className='mt-5 mb-3'>Gisele's RSS Feed</h1>
+      <h1 className='mt-5 mb-3 fw-bold'>Gisele's RSS Feed</h1>
       <div className="row">
         <div className='col-12 col-lg-2'>
           <FilterPanel feedSources={feedSources} handleSetSelectedSource={handleSetSelectedSource} selectedSource={selectedSource} />

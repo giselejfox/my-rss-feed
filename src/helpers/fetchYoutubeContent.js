@@ -22,7 +22,7 @@ export default async function fetchYoutubeContent(handle) {
     // Step 3: format the video data
     const formattedDataVideo = dataVideo.items.map((item) => ({
           title: item.snippet.title,
-          link: `youtube.com/watch_popup?v=${item.id.videoId}`,
+          link: `https://youtube.com/watch_popup?v=${item.id.videoId}`,
           date: item.snippet.publishedAt,
           source: item.snippet.channelTitle,
       })
