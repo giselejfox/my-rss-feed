@@ -27,7 +27,8 @@ if (!admin.apps.length) {
 
 const db = admin.database();
 
-export const handler = async (req) => {
+// eslint-disable-next-line import/no-anonymous-default-export
+export default async (req) => {
 
     const { next_run } = await req.json()
 
@@ -141,6 +142,6 @@ export const handler = async (req) => {
 }
 
 
-export const config: Config = {
+export const config = {
   schedule: "@daily"
 }
