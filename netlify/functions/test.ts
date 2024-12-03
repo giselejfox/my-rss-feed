@@ -27,7 +27,11 @@ if (!admin.apps.length) {
 
 const db = admin.database();
 
-export const handler = async (event, context) => {
+export const handler = async (req) => {
+
+    const { next_run } = await req.json()
+
+    console.log("Received event! Next invocation at:", next_run)
 
     const apiKey = process.env.REACT_APP_YOUTUBE_API_CREDENTIAL;  
 
@@ -138,5 +142,5 @@ export const handler = async (event, context) => {
 
 
 export const config: Config = {
-  schedule: "0 0 * * *"
+  schedule: "@daily"
 }
