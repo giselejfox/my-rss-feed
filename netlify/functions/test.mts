@@ -1,6 +1,5 @@
 import * as admin from 'firebase-admin';
-import fetch from 'node-fetch';
-import type { Config } from '@netlify/functions';
+// import fetch from 'node-fetch';
 
 // Initialize Firebase Admin SDK
 if (!admin.apps.length) {
@@ -47,6 +46,7 @@ export default async (req) => {
 
      // Function to fetch the last 10 videos from a YouTube channel
     async function fetchYoutubeContent(handle) {
+        const fetch = (await import('node-fetch')).default;  // Dynamically import `fetch`
         try {
             // Step 1: get the channel ID
             const requestIDURL = `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&forHandle=${handle}&key=${apiKey}`
@@ -76,6 +76,7 @@ export default async (req) => {
 
     // Function to fetch the last 10 items from a RSS feed
     async function fetchRSSFeed(url) {
+        const fetch = (await import('node-fetch')).default;  // Dynamically import `fetch`
         try {
             const feedUrl = `https://rss2json.com/api.json?rss_url=${encodeURIComponent(url)}`;
             const response = await fetch(feedUrl);
