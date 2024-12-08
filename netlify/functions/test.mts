@@ -29,9 +29,15 @@ const db = admin.database();
 // eslint-disable-next-line import/no-anonymous-default-export
 export default async (req) => {
 
-    const { next_run } = await req.json()
+    console.log("test")
 
-    console.log("Received event! Next invocation at:", next_run)
+    const body = await req.json()
+    if (!body || !body.next_run) {
+        throw new Error("Missing next_run property in the request body.");
+    } else {
+        const { next_run } = body;
+        console.log("Received event! Next invocation at:", next_run);
+    }
 
     const apiKey = process.env.REACT_APP_YOUTUBE_API_CREDENTIAL;  
 
